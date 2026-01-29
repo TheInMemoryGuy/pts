@@ -33,11 +33,11 @@ This lab assumes you have:
 * All previous labs successfully completed
 
 
-## Task 1: Display the CLIP embedding model
+## Task 1: Display the CLIP embedding models
 
-The CLIP embedding model has already been converted to ONNX format and loaded into the database. This was described in the lab introduction and is the same model that was used to create the vectors of the park images, which were also pre-loaded.
+The CLIP embedding models have already been converted to ONNX format and loaded into the database. This was described in the lab introduction and is the same model that was used to create the vectors of the park images, which were also pre-loaded.
 
-1. Display the CLIP embedding model:
+1. Display the CLIP embedding models:
 
     ```
     <copy>
@@ -121,7 +121,7 @@ In this task we will run similar queries to the ones we ran in the previous labs
 
     ![civil war open image](images/civil_war.png " ")
 
-2. Now let's see if we can find images that have rock climbing, but this time we will search with an image of a rock climber and not the phrase "rock climbing. For simplicity we will use one of the images from the PARK\_IMAGES table to use as our search criteria. This will involve a bit of PL/SQL to do, but in the interest of showing you how it is done we chose not to embed the details in a separate function.
+2. Now let's see if we can find images that have rock climbing, but this time we will search with an image of a rock climber and not the phrase "rock climbing". For simplicity we will use one of the images from the PARK\_IMAGES table to use as our search criteria. This will involve a bit of PL/SQL to do, but in the interest of showing you how it is done we chose not to embed the details in a separate function.
 
     In the APEX_DEMO lab we will let you choose your own image to search on, but the following shows you how to accomplish this with SQL:
 
@@ -145,8 +145,8 @@ In this task we will run similar queries to the ones we ran in the previous labs
         VECTOR_EMBEDDING(clip_vit_txt USING 'Rock Climbing' AS data), COSINE)
       FETCH EXACT FIRST 1 ROWS ONLY;
       --
-      -- The following uses the previously found URL and loads the corresponding image
-      -- into a BLOB
+      -- The following uses the previously found URL and loads the 
+      -- corresponding image into a BLOB
       --
       DBMS_LOB.createtemporary(l_blob, FALSE);
       l_http_request := UTL_HTTP.begin_request(v_image_url, 'GET');
@@ -163,9 +163,9 @@ In this task we will run similar queries to the ones we ran in the previous labs
           UTL_HTTP.end_response(l_http_response);
       END;
       --
-      -- The following uses the image from above to search for the top 10 closest matches
-      -- to that image. Notice that an image vector is created from the CLIP_VIT_IMG embedding
-      -- model.
+      -- The following uses the image from above to search for the top 10
+      -- closest matches to that image. Notice that an image vector is
+      -- created using the CLIP_VIT_IMG embedding model.
       --
       FOR image_rec IN (
         SELECT description, url
