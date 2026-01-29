@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This lab walks you through the steps to create vector indexes and run approximate similarity searches on images.
+This lab walks you through the steps to run similarity searches on images using text or images as search criteria.
 
 Watch the video below for a quick walk-through of the similarity search on images lab:
 
@@ -12,9 +12,9 @@ Estimated Lab Time: 10 minutes
 
 ### About Image Similarity Search
 
-In the previous labs, we looked at embedding models and similarity search on text-based data. Now we are going to look at something even more impressive. The ability to use words or phrases to search images. It is also possible to use images to search for similar images, but we will keep it simple in this lab and just use text-based searches to find semantically similar images. The US National Parks dataset that we have been using has two tables. One that describes parks and then another that has images for those parks. We are going to search the images and then also combine a query to join the two tables and look through images based on a general location.
+In the previous labs, we looked at embedding models and similarity search on text-based data. Now we are going to look at something even more impressive. The ability to use text phrases or images to search for images. This will require using different embedding models depending on whether a text phrase or an image is being used for the search comparison. In this lab we will be using the multi-modal embedding model CLIP (Contrastive Language-Image Pretraining) which is a deep learning model developed by OpenAI.  that understands how to vectorize an image for input to our similarity search. This lab will continue We will again be using the US National Parks dataset. Recall that there are two tables in this dataset, one that describes parks and then another that has images for those parks. We are going to search for images using text phrases or images, and then also combine a query to join the two tables and look through images based on a general location.
 
-The image vector embeddings have already been created since that would have taken too long for this lab environment, but we will still take a look at them. The embedding model that was used to create the vector embeddings was the CLIP multi-modal embedding pipeline, and can be split into two different ONNX compatible embedding models to allow searching for images based on text words and/or phrases or actual images. This is described in more detail in the [Oracle AI Vector Search User's Guide] (https://docs.oracle.com/en/database/oracle/oracle-database/23/vecse/onnx-pipeline-models-multi-modal-embedding.html). The text-based model has already been loaded into the database as you saw earlier, and is called CLIP\_VIT\_TXT.
+The vector embeddings for the dataset images have already been created since that would have taken too long for this lab environment, but we will still take a look at them. The embedding model that was used to create the vector embeddings was also the CLIP multi-modal embedding pipeline, and can be split into two different ONNX compatible embedding models to allow searching for images based on text phrases or actual images as mentioned previously. This is described in more detail in the [Oracle AI Vector Search User's Guide] (https://docs.oracle.com/en/database/oracle/oracle-database/23/vecse/onnx-pipeline-models-multi-modal-embedding.html). Both of these models have already been loaded into the database as you saw earlier. The text version is called CLIP\_VIT\_TXT and the image version is called CLIP\_VIT\_IMG.
 
 
 ### Objectives
@@ -55,14 +55,14 @@ The CLIP embedding model has already been converted to ONNX format and loaded in
     <copy>
     SELECT model_name, attribute_name, attribute_type, data_type, vector_info
     FROM user_mining_model_attributes
-    WHERE model_name = 'CLIP_VIT_TXT'
+    WHERE model_name LIKE 'CLIP%'
     ORDER BY 1,3;
     </copy>
     ```
 
     ![model details query](images/clip_emb_model_details.png " ")
 
-    You may notice that the VECTOR\_INFO column displays 'VECTOR(512,FLOAT32)' for this model which is different than what we saw for the all\_MiniLM\_L12\_v2 model which was VECTOR(384, FLOAT32).  This means that the CLIP text model is wider as it has 512 dimensions.
+    You may notice that the VECTOR\_INFO column displays 'VECTOR(512,FLOAT32)' for this model which is different than what we saw for the all\_MiniLM\_L12\_v2 model which was VECTOR(384, FLOAT32).  This means that the CLIP model uses 512 dimensions.
 
 
 ## Task 2: Display the Vector column in the PARKS_IMAGES table
@@ -93,7 +93,7 @@ In this task we will take a look at the PARK\_IMAGES table. The table itself has
 
 ## Task 3: Run image based similarity searches
 
-In this task we will run similar queries to the ones we ran in the previous labs, but now we will use our text phrases to search the image vectors, not text vectors.
+In this task we will run similar queries to the ones we ran in the previous labs, but now we will use our text phrases to search the image vectors in the PARKS\_IMAGES table, not text vectors that were in the PARKS table.
 
 1. First we can search for Civil War park images:
 
@@ -121,21 +121,72 @@ In this task we will run similar queries to the ones we ran in the previous labs
 
     ![civil war open image](images/civil_war.png " ")
 
-2. Now let's see if we can find images that have rock climbing:
+2. Now let's see if we can find images that have rock climbing, but this time we will search with an image of a rock climber and not the phrase "rock climbing. For simplicity we will use one of the images from the PARK\_IMAGES table to use as our search criteria. This will involve a bit of PL/SQL to do, but in the interest of showing you how it is done we chose not to embed the details in a separate function.
+
+    In the APEX_DEMO lab we will let you choose your own image to search on, but the following shows you how to accomplish this with SQL:
 
     ```
     <copy>
-    SELECT description, url
-    FROM park_images
-    ORDER BY VECTOR_DISTANCE(image_vector,
-      VECTOR_EMBEDDING(clip_vit_txt USING 'rock climbing' AS data), COSINE)
-    FETCH EXACT FIRST 10 ROWS ONLY;
+    DECLARE
+      v_image_url     VARCHAR2(1000);
+      l_http_request  UTL_HTTP.req;
+      l_http_response UTL_HTTP.resp;
+      l_blob          BLOB;
+      l_raw           RAW(32767);
+      l_buffer_size   PLS_INTEGER := 32767;
+    BEGIN
+      --
+      -- Get the URL of an image for the closest match to "Rock Climbing"
+      --
+      SELECT url
+      INTO v_image_url
+      FROM park_images
+      ORDER BY VECTOR_DISTANCE(image_vector,
+        VECTOR_EMBEDDING(clip_vit_txt USING 'Rock Climbing' AS data), COSINE)
+      FETCH EXACT FIRST 1 ROWS ONLY;
+      --
+      -- The following uses the previously found URL and loads the corresponding image
+      -- into a BLOB
+      --
+      DBMS_LOB.createtemporary(l_blob, FALSE);
+      l_http_request := UTL_HTTP.begin_request(v_image_url, 'GET');
+      --
+      l_http_response := UTL_HTTP.get_response(l_http_request);
+      --
+      BEGIN
+        LOOP
+          UTL_HTTP.read_raw(l_http_response, l_raw, l_buffer_size);
+          DBMS_LOB.append(l_blob, l_raw);
+        END LOOP;
+      EXCEPTION
+        WHEN UTL_HTTP.end_of_body THEN
+          UTL_HTTP.end_response(l_http_response);
+      END;
+      --
+      -- The following uses the image from above to search for the top 10 closest matches
+      -- to that image. Notice that an image vector is created from the CLIP_VIT_IMG embedding
+      -- model.
+      --
+      FOR image_rec IN (
+        SELECT description, url
+        FROM park_images
+        ORDER BY VECTOR_DISTANCE(image_vector,
+          VECTOR_EMBEDDING(clip_vit_img USING l_blob AS data), COSINE)
+        FETCH EXACT FIRST 10 ROWS ONLY
+      ) LOOP
+        --
+        DBMS_OUTPUT.PUT_LINE('Description: ' || image_rec.description);
+        DBMS_OUTPUT.PUT_LINE('URL: ' || image_rec.url);
+      END LOOP;
+      --
+      DBMS_LOB.freetemporary(l_blob);
+    END;
     </copy>
     ```
 
     ![rock climbing query](images/query_rock_climbing.png " ")
 
-    If you click on the first URL, click on the eye icon, then highlight the URL and right click you can choose the "Go to ..." option to open the image in a new browser tab:
+    If you highlight a resulting URL and right click you can choose the "Go to ..." option to open the image in a new browser tab:
 
     ![rock climbing image](images/rock_climber.png " ")
 

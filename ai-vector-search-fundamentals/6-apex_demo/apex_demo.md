@@ -84,21 +84,25 @@ After signing in you should see a browser window like the following:
 
 ## Task 2: Run the APEX demo
 
-You can now enter any search term you would like to search on. You can pull down on a pre-created list of search terms or make up your own. The demo is designed to return the top 10 most similar park images based on the search term. Only one image per park is returned in search order, although the dataset contains many images for most parks.
+You can now enter any search term or image that you would like to search on. You can pull down on a pre-created list of search terms or make up your own. The demo is designed to return the top 10 most similar park images based on the search term. Only one image per park is returned in search order, although the dataset contains many images for most parks.
 
-The following shows searching on the term "geysers":
+1. Run a text search:
 
-1. Run APEX demo:
+    The following shows searching on the term "geysers". Type in the word "geysers" and click on the Search Text button:
 
-    ![apex search](images/apex_search.png " ")
+    ![apex text search](images/apex_text_search.png " ")
 
-2. If you would like to see a list of search terms then you can just click on the arrow to the far right of the query box:
+2. If you would like to see a list of text search terms then you can just click on the arrow to the far right of the query box:
 
-    ![apex query](images/apex_pulldown_screen.png " ")
+    ![apex search terms](images/apex_pulldown_screen.png " ")
 
-3. If you would like to see the SQL that is being run then just click on the arrow next to the "Display Query" label:
+3. If you would like to run a search using an image then click on the "Upload image for search" box and choose an image from your machine. If you don't have an image then you can right click on one of the images from a previous search and save that image to your machine. You can then choose that image to search on. Once the image is selected click on the Search Image button. In this example an image of an alligator was used:
 
-    ![apex query](images/apex_query_screen.png " ")
+    ![apex image search](images/apex_image_search.png " ")
+
+4. If you would like to see the SQL that is being run for these searches then just click on the arrow next to the "Display Query" label:
+
+    ![apex sql query](images/apex_query_screen.png " ")
 
 Go ahead and experiment with different search terms. You can't hurt anything and you may be amazed at just how good AI Vector Search really is.
 
