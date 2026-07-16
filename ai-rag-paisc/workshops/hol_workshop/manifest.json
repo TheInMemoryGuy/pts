@@ -1,0 +1,44 @@
+{
+    "workshoptitle": "AI Vector Search with RAG and the Private AI Services Container",
+    "help": "llivelabs-help-pts_us@oracle.com",
+    "variables": ["../../variables/variables.json",
+        "../../variables/variables-in-another-file.json"],
+    "tutorials": [
+        {
+            "title": "Get Started",
+            "description": "Prerequisites for LiveLabs (Oracle-owned tenancies). The title of the lab and the Contents Menu title (the title above) match for Prerequisite lab. This lab is always first.",
+            "filename": "https://livelabs.oracle.com/cdn/common/labs/cloud-login/cloud-login-livelabs2.md"
+        },
+        {
+            "title": "Introduction",
+            "description": "Introduction to AI Vector Search.",
+            "filename": "../../introduction/introduction.md"
+        },
+        {
+            "title": "Database Connection",
+            "description": "Connecting to AI Vector Search database in Oracle's environment (sandbox)",
+            "filename": "../../database_connection/sandbox_connection.md"
+        },
+        {
+            "title": "Lab 1: Vector Embeddings",
+            "description": "Vectors and vector embeddings in AI Vector Search",
+            "filename": "../../vector_embedding/text_embeddings.md"
+        },
+        {
+            "title": "Lab 2: Similarity Search",
+            "description": "Understanding Similarity Search",
+            "filename": "../../similarity_search/exhaustive_search.md"
+        },
+        {
+            "title": "Lab 3: Retrieval Augmented Generation (RAG)",
+            "description": "Understanding Retrieval Augmented Generation",
+            "type": "sandbox",
+            "filename": "../../rag/rag.md"
+        },
+        {
+            "title": "Need Help?",
+            "description": "Solutions to Common Problems and Directions for Receiving Live Help",
+            "filename":"https://livelabs.oracle.com/cdn/common/labs/need-help/need-help-livelabs.md"
+        }
+    ]
+}
