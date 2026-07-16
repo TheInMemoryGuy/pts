@@ -2,9 +2,15 @@
 
 ## About This Workshop
 
-The **Getting Started with AI Vector Search** workshop will show you how you can combine the ability to perform similarity search on unstructured data like text and images with relational data to enable a whole new class of applications.
+The **AI Vector Search RAG with Private AI Services Container ** workshop will show you how you can combine similarity search on your private data with an LLMs ability to return answers in a natural language format. We will also make use of the Private AI Services container to perform the vector embeddings and LLM interactions required for this workshop. The Private AI Services container enables a truly private environment that can be much more efficient than the Oracle AI Database alone.
 
-Estimated Workshop Time: 80 minutes
+The workshop will walk you through the process of creating vector embeddings, showing you what a vector is, and then using those vectors to perform similarity search on unstructured data like text and images to enable a whole new class of applications.
+
+Then we will walk you through the steps to create a Retrieval Augmented Generation (RAG) pipeline. Using AI Vector Search to augment a query to a Large Language Model (LLM), this lab will demonstrate a Support Incidents system and will use the results of resolved incidents to augment queries with private information that an LLM would not have access to. Finally, the RAG query created in this lab will be used in an APEX-based chatbot application to show how AI Vector Search can be used in a real application.
+
+![chatbot demo](images/chatbot_popup.png " ")
+
+Estimated Workshop Time: 45 minutes
 
 Oracle AI Vector Search is a sophisticated suite of capabilities, empowering developers to seamlessly store, index, and search vector data within Oracle Database. Vector data, represented as arrays of numbers, plays a pivotal role in capturing diverse features within unstructured data, including images, text, audio and video.
 
@@ -24,15 +30,7 @@ At the heart of AI Vector Search is the ability to do a similarity search. A sim
 
 Another big benefit of AI Vector Search is that similarity search can be combined with relational search on business data in one single system. This is not only powerful but also significantly more effective because AI Vector Search allows you to generate, store, index, and query vector embeddings along with other business data, using the full power of SQL. This means you don't need to add a specialized vector database, eliminating the pain of data fragmentation between multiple systems.
 
-In this workshop we will build the AI Vector Search features that will enable you to use AI Vector Search to search on text and image data. In the interest of time, and not to get too far into all of the implementation details, we have already set up the database environment including pre-staging files, pre-loading embedding models and even pre-loading vector embeddings for the park images. All of this was done so that you could just run the labs in the workshop and see how AI Vector Search works. In our [blog posts](https://blogs.oracle.com/database/category/db-vector-search) we have gone into more detail about how AI Vector Search works and there is a wealth of information and examples in the [Oracle AI Vector Search User's Guide](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/index.html) about how to use and implement AI Vector Search.
-
-There will be labs that will use a US National Parks dataset to search on descriptions and images of parks based on your interests. For example, you may want to search for parks where you can have a family picnic, go rock climbing, or see other spectacular sights. Below you can see a search on "picnic tables" that you will be able to in the APEX Demo lab. The labs in this workshop will build the SQL and show you the features of AI Vector Search that enable this APEX-based demo.
-
-![apex demo](images/apex_demo.png " ")
-
-In addition, there is a lab that will walk you through the steps to create a Retrieval Augmented Generation (RAG) pipeline. Using AI Vector Search to augment a query to a Large Language Model (LLM), this lab will demonstrate a Support Incidents system and will use the results of resolved incidents to augment queries with private information that an LLM would not have access to. Finally, the RAG query created in this lab will be used in an APEX-based chatbot application to show how AI Vector Search can be used in a real application.
-
-![chatbot demo](images/chatbot_popup.png " ")
+In this workshop we will build the AI Vector Search features that will enable you to use AI Vector Search to search on text and image data. In the interest of time, and not to get too far into all of the implementation details, we have already set up the database environment including pre-staging files, pre-loading embedding models and even pre-loading vector embeddings. All of this was done so that you could just run the labs in the workshop and see how AI Vector Search works. In our [blog posts](https://blogs.oracle.com/database/category/db-vector-search) we have gone into more detail about how AI Vector Search works and there is a wealth of information and examples in the [Oracle AI Vector Search User's Guide](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/index.html) about how to use and implement AI Vector Search.
 
 ### Objectives
 
@@ -41,12 +39,9 @@ In this workshop, you will learn how to:
 * Load a vector embedding model into Oracle AI Database.
 * Learn about vectors and the new vector data type.
 * Create vector embeddings from the embedding model you loaded.
+* Create vector embeddings using the Private AI Services container.
 * Learn what similarity search is.
 * Perform an exact similarity search using basic SQL query operations.
-* Create a vector index.
-* Perform an approximate similarity search.
-* Use similarity search with traditional relational searches.
-* Run an APEX demo using the previously created data and queries.
 * Learn how to create a Retrieval Augmented Generation (RAG) pipeline using AI Vector Search.
 
 ### Prerequisites
@@ -81,6 +76,6 @@ The RAG lab uses a chatbot demo that was also written in APEX and has its own UR
 * [Oracle Documentation](http://docs.oracle.com)
 
 ## Acknowledgements
-* **Author** - Andy Rivenes, Product Manager, AI Vector Search
-* **Contributors** - Markus Kissling, Product Managers, AI Vector Search
-* **Last Updated By/Date** - Andy Rivenes, Product Manager, AI Vector Search, April 2026
+* **Author** - Andy Rivenes and Doug Hood, Product Manager, AI Vector Search
+* **Contributors** - David Start, Oracle LiveLabs Team
+* **Last Updated By/Date** - 
