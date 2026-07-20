@@ -1,0 +1,32 @@
+{
+    "workshoptitle": "AI Vector Search with RAG and the Private AI Services Container",
+    "help": "livelabs-help-pts_us@oracle.com",
+    "tutorials": [
+        {
+            "title": "Introduction",
+            "description": "Introduction to AI Vector Search.",
+            "filename": "../../introduction/introduction.md"
+        },
+        {
+            "title": "Lab 1: Vector Embeddings",
+            "description": "Vectors and vector embeddings in AI Vector Search",
+            "filename": "../../vector_embedding/text_embeddings.md"
+        },
+        {
+            "title": "Lab 2: Similarity Search",
+            "description": "Understanding Similarity Search",
+            "filename": "../../similarity_search/exhaustive_search.md"
+        },
+        {
+            "title": "Lab 3: Retrieval Augmented Generation (RAG)",
+            "description": "Understanding Retrieval Augmented Generation",
+            "type": "sandbox",
+            "filename": "../../rag/rag.md"
+        },
+        {
+            "title": "Need Help?",
+            "description": "Solutions to Common Problems and Directions for Receiving Live Help",
+            "filename": "https://livelabs.oracle.com/cdn/common/labs/need-help/need-help-livelabs.md"
+        }
+    ]
+}
