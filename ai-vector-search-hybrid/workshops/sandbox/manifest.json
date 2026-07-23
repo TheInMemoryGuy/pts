@@ -1,5 +1,5 @@
 {
-    "workshoptitle": "Getting Started with AI Vector Search",
+    "workshoptitle": "Getting Started with Hybrid Search",
     "help": "llivelabs-help-pts_us@oracle.com",
     "variables": ["../../variables/variables.json",
         "../../variables/variables-in-another-file.json"],
@@ -11,8 +11,8 @@
         },
         {
             "title": "Introduction",
-            "description": "Introduction to AI Vector Search.",
-            "filename": "../../1-introduction/introduction.md"
+            "description": "Introduction to Hybrid Search.",
+            "filename": "../../introduction/introduction.md"
         },
         {
             "title": "Database Connection",
@@ -22,34 +22,22 @@
         {
             "title": "Lab 1: Vector Embeddings",
             "description": "Vectors and vector embeddings in AI Vector Search",
-            "filename": "../../2-embedding_models/text_embeddings.md"
+            "filename": "../../embedding_models/text_embeddings.md"
         },
         {
             "title": "Lab 2: Exhaustive Search",
             "description": "Understanding Exhaustive Similarity Search",
-            "filename": "../../3-exhaustive_search/exhaustive_search.md"
+            "filename": "../../exhaustive_search/exhaustive_search.md"
         },
         {
             "title": "Lab 3: Approximate Search",
             "description": "Understanding Approximate Similarity Search",
-            "filename": "../../4-approximate_search/approx_search.md"
+            "filename": "../../approximate_search/approx_search.md"
         },
         {
-            "title": "Lab 4: Image Search",
-            "description": "Exploring Image Search",
-            "filename": "../../5-image_search/image_search.md"
-        },
-        {
-            "title": "Lab 5: APEX Demo",
-            "description": "Running AI Vector Search in an APEX application",
-            "type": "sandbox",
-            "filename": "../../6-apex_demo/apex_demo.md"
-        },
-        {
-            "title": "Lab 6: Retrieval Augmented Generation (RAG)",
-            "description": "Understanding Retrieval Augmented Generation",
-            "type": "sandbox",
-            "filename": "../../rag/rag.md"
+            "title": "Lab 4: Iceberg Tables",
+            "description": "Exploring Iceberg Table Search",
+            "filename": "../../iceberg_tables/iceberg.md"
         },
         {
             "title": "Need Help?",
