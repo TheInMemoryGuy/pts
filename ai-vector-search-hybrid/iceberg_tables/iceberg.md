@@ -60,50 +60,35 @@ Iceberg tables can have two different formats, they can be Manifest-file based o
     </copy>
     ```
 
-    The output should show you something similar to the following. Note the data/\*.parquet is the parquet file, or the actual data and the metadata/ files are the metadata that describes how to access the data.
+    The output should show you something similar to the following. Note the data/\*.parquet is the parquet file, or the actual data, and the metadata/ files are the metadata that describes how to access the data.
 
-    ```text
-    OBJECT_NAME                                                                           BYTES
-    ________________________________________________________________________________ __________
-    data/00000-1-c585a711-e134-41a4-9b90-76ba51f092a1-0-00001.parquet                   2092091
-    metadata/22ac8282-b036-4fb7-ba17-ef6d03ba055f-m0.avro                                  7398
-    metadata/snap-1764402987059885972-1-22ac8282-b036-4fb7-ba17-ef6d03ba055f.avro          4468
-    metadata/v1.metadata.json                                                              1899
-    metadata/version-hint.text                                                                1
-    ```
+    ![list objects](images/list_objects.png " ")
 
 ## Task 2: Create an external table
 
 Next we will create an external table so that we can access our Iceberg table.
 
-1. Run the following SQL to create an external table named EXT\_VECT\_TABLE:
+1. Run the following SQL to create an external table named WIKI\_ICEBERG:
 
     ```[]
     <copy>
-    CREATE TABLE ext_vect_table (
-      id    VARCHAR2(32),
-      url   VARCHAR2(300),
-      title VARCHAR2(200),
-      text  CLOB,
-      emb   VECTOR(1024, FLOAT32)
-      )
-      ORGANIZATION EXTERNAL (
-        TYPE ORACLE_BIGDATA
-        DEFAULT DIRECTORY DATA_PUMP_DIR
-        ACCESS PARAMETERS (
-          com.oracle.bigdata.fileformat=PARQUET
-          com.oracle.bigdata.credential.name=OCI_CRED2
-          com.oracle.bigdata.access_protocol=iceberg
-          com.oracle.bigdata.log.opt=normal
-          com.oracle.bigdata.debug=true
-          com.oracle.bigdata.log.qc=DATA_PUMP_DIR:ext_qc_%p
-          com.oracle.bigdata.log.exec=DATA_PUMP_DIR:ext_exec_%p_%a
-      )
-      LOCATION ('iceberg:https://objectstorage.us-ashburn-1.oraclecloud.com/n/oradbclouducm/b/bucket-vector/o/iceberg/db/wiki_iceberg_1K/metadata/v1.metadata.json')
-    )
-    REJECT LIMIT unlimited;
+    BEGIN
+      DBMS_CLOUD.CREATE_EXTERNAL_TABLE(
+        table_name =>'wiki_iceberg',
+        credential_name => 'OCI_CRED2',
+        file_uri_list=>'https://objectstorage.us-ashburn-1.oraclecloud.com/n/oradbclouducm/b/bucket-vector/o/iceberg/db/wiki_iceberg_1K/metadata/v1.metadata.json',
+        format=>'{"access_protocol":{"protocol_type":"iceberg"}}',
+        column_list => 'id varchar2(32) PRIMARY KEY RELY DISABLE,
+          url varchar2(300),
+          title varchar2(200),
+          text clob,
+          emb vector(1024, float32)'
+      );
+    END;
     </copy>
     ```
+
+    ![create table](images/create_wiki_iceberg.png " ")
 
     Notice that we have explicitly specified the columns for the table using Oracle data types including the VECTOR data type for the vector embedded column. Also note that we have referenced the storage location in our Object Storage bucket for the Iceberg table.
 
@@ -115,21 +100,13 @@ In this task we will run a describe on the new table to verify the columns creat
 
     ```[]
     <copy>
-    DESC ext_vect_table
+    DESC wiki_iceberg
     </copy>
     ```
 
     The output should look like the following:
 
-    ```text
-    Name     Null?    Type
-    ________ ________ _____________________________
-    ID                VARCHAR2(32)
-    URL               VARCHAR2(300)
-    TITLE             VARCHAR2(200)
-    TEXT              CLOB
-    EMB               VECTOR(1024,FLOAT32,DENSE)
-    ```
+    ![describe table columns](images/desc_wiki_iceberg.png " ")
 
     Notice the EMB column has a VECTOR datatype.
 
@@ -137,122 +114,93 @@ In this task we will run a describe on the new table to verify the columns creat
 
 In this task we will run a similarity search on the Iceberg table data by accessing the external table we just created.
 
-1. Run the following statement to set the parameters to enable the creation of the query vector. In this Lab we are using the OCI Gen AI service to access the same "cohere.embed-multilingual-v3.0" embedding model that was used to create the data vectors in the Iceberg table:
-
-    ```[]
-    <copy>
-    var params clob;
-    begin
-      :params := '{
-        "provider": "ocigenai",
-        "credential_name": "OCI_GENAI_CRED",
-        "url": "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/20231130/actions/embedText",
-        "model": "cohere.embed-multilingual-v3.0",
-        "transfer_timeout":1200
-      }';
-    end;
-    /
-    </copy>
-    ```
-
-2. Run the following query to find Wikipedia articles about football:
+1. The following query will search for Wikipedia articles about football. In this Lab we are using the OCI Gen AI service to access the same "cohere.embed-multilingual-v3.0" embedding model that was used to create the data vectors in the Iceberg table. Run the following query:
 
     ```[]
     <copy>
     SELECT
-       url,
-       title,
-       vector_distance(emb, dbms_vector_chain.utl_to_embedding('football', JSON(:params))) AS dist,
-       text
-    FROM  ext_vect_table
-    ORDER BY dist DESC
+      title,
+      VECTOR_DISTANCE(emb,
+        DBMS_VECTOR_CHAIN.UTL_TO_EMBEDDING('football',
+          JSON('{"provider": "ocigenai",
+                 "credential_name": "OCI_GENAI_CRED",
+                 "url": "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/20231130/actions/embedText",
+                 "model": "cohere.embed-multilingual-v3.0",
+                 "transfer_timeout":1200}') )) AS dist,
+      text
+    FROM  wiki_iceberg
+    ORDER BY dist
     FETCH FIRST 5 ROWS ONLY;
-    </copy>
     ```
 
-    ![exhaustive query2](images/parks_exhaustive_rock_climbing.png " ")
+    ![similarity search](images/similarity_search.png " ")
 
-    We have included the vector distance, that is the distance between the 'football' vector and the data vector in descending order. The closest match is first and then the next four matches in descending order.
+    We have included the vector distance, that is the distance between the 'football' vector and the data vector. The closest match is first and then the next four closest matches are next.
 
-3. The last step in this task is to take a look at the execution plan. Since we have not created any indexes we will expect to see a FULL TABLE SCAN of the EXT\_VECT\_TABLE.
+2. The last step in this task is to take a look at the execution plan. Since we have not created any indexes we will expect to see a FULL TABLE SCAN of the WIKI\_ICEBERG table.
 
-    ```[]
-    <copy>
-    SELECT *
-    FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR());
-    </copy>
-    ```
+    Click on the Explain Plan button to display an execution plan. See the following image:
 
-    ![distance query](images/parks_exhaustive_rock_climbing_distance.png " ")
+    ![explain plan icon](images/explain_plan_icon.png " ")
+
+    You should see an execution plan similar to the following:
+
+    ![search plan](images/search_plan.png " ")
 
 ## Task 5: Create a vector index on the Iceberg Table
 
-In this task we will run a similarity search on the Iceberg table data by accessing the external table we just created.
+In this task we will create a vector index on the Iceberg table.
 
-1. Run the following statement to create a vector index on the EMB column in the EXT_VECT_TABLE, which is the VECTOR column where the vector embeddings for the TEXT column are stored. Note that although the Iceberg table is stored in Object Storage the vector index will be stored in Oracle AI Database.
+1. Run the following statement to create a vector index on the EMB column in the WIKI\_ICEBERG table, which is the VECTOR column where the vector embeddings for the TEXT column are stored. Note that although the Iceberg table is stored in Object Storage the vector index will be created and stored in Oracle AI Database.
 
     ```[]
     <copy>
-    ALTER SESSION SET "_xt_table_hidden_column" = TRUE;
-    ALTER SESSION SET "_xt_hybrid_addl_hidden_column" = TRUE;
-    CREATE VECTOR INDEX ext_vect_idx_ivf ON ext_vect_table (emb)
+    CREATE VECTOR INDEX wiki_iceberg_idx ON wiki_iceberg (emb)
     ORGANIZATION NEIGHBOR PARTITIONS;
     </copy>
     ```
 
-  Note that we added the session level parameters again just in case you might have exited your previous session where we set them before we created the external table EXT\_VECT\_TABLE.
+    ![search plan](images/create_index.png " ")
 
 ## Task 6: Run the similarity search a second time
 
-Now that you have created a vector index you can run the same similarity search you ran in Task 4. Now the query execution should take advantage of the vector index and run much faster and access many fewer vectors.
+Now that you have created a vector index you can run the same similarity search you ran in Task 4. The query execution should take advantage of the vector index and run much faster and access many fewer vectors.
 
-1. Run the following statement to set the parameters to enable the creation of the query vector. This is the same statement that we ran in Task 4, Step 1:
-
-    ```[]
-    <copy>
-    var params clob;
-    begin
-      :params := '{
-        "provider": "ocigenai",
-        "credential_name": "OCI_GENAI_CRED",
-        "url": "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/20231130/actions/embedText",
-        "model": "cohere.embed-multilingual-v3.0",
-        "transfer_timeout":1200
-      }';
-    end;
-    /
-    </copy>
-    ```
-
-2. Run the following query to find Wikipedia articles about football:
+1. Run the following query:
 
     ```[]
     <copy>
     SELECT
-       url,
-       title,
-       vector_distance(emb, dbms_vector_chain.utl_to_embedding('football', JSON(:params))) AS dist,
-       text
-    FROM  ext_vect_table
-    ORDER BY dist DESC
+      title,
+      VECTOR_DISTANCE(emb,
+        DBMS_VECTOR_CHAIN.UTL_TO_EMBEDDING('football',
+          JSON('{"provider": "ocigenai",
+                 "credential_name": "OCI_GENAI_CRED",
+                 "url": "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/20231130/actions/embedText",
+                 "model": "cohere.embed-multilingual-v3.0",
+                 "transfer_timeout":1200}') )) AS dist,
+      text
+    FROM  wiki_iceberg
+    ORDER BY dist
     FETCH FIRST 5 ROWS ONLY;
     </copy>
     ```
 
-    ![exhaustive query2](images/parks_exhaustive_rock_climbing.png " ")
+    ![index query](images/index_search.png " ")
 
-    This time the query should have run much faster.
+    This time the query should have run much faster, and notice that the results might not be the same. Recall that a similarity search using a vector index is an **approximate** search, not exhaustive. That means that not all of the vectors were compared and therefore the search may produce slightly different results.
 
-3. The last step in this task is to take a look at the execution plan. Since we have not created any indexes we will expect to see a FULL TABLE SCAN of the EXT\_VECT\_TABLE.
+2. Now click on the Explain Plan button to display an execution plan. See the following image:
 
-    ```[]
-    <copy>
-    SELECT *
-    FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR());
-    </copy>
-    ```
+    ![explain plan icon](images/explain_plan_icon.png " ")
 
-    ![distance query](images/parks_exhaustive_rock_climbing_distance.png " ")
+    You should see an execution plan similar to the following:
+
+    ![index plan](images/index_plan.png " ")
+
+    You might notice that the plan is a bit difficult to decipher to identify the use of the index. Here is what it looks like using DBMS\_XPLAN:
+
+    ![index xplan](images/index_xplan.png " ")
 
 ## Learn More
 
@@ -265,4 +213,4 @@ Now that you have created a vector index you can run the same similarity search 
 
 * **Author** - Andy Rivenes, Product Manager, AI Vector Search
 * **Contributors**
-* **Last Updated By/Date** - Andy Rivenes, Product Manager, AI Vector Search, February 2026
+* **Last Updated By/Date** - Andy Rivenes, Product Manager, AI Vector Search, August 2026
