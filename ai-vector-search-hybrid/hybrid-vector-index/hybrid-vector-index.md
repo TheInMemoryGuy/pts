@@ -81,7 +81,6 @@ Estimated Time: 20 minutes
 
     This workshop uses word-based chunks of up to 1,000 words with no overlap. Zero overlap makes chunk counts easier to inspect. In production, use a small overlap when chunks need to retain context across their boundaries. Oracle recursively splits text at natural boundaries, such as paragraphs and sentences. The index uses cosine distance, IVF, and a target accuracy of 95. Use the distance metric that matches the embedding model; cosine is appropriate for this `MINILM_L12_V2` configuration.
 
-
 3. Review the stored preference values.
 
     ```[]
@@ -93,11 +92,11 @@ Estimated Time: 20 minutes
     ORDER  BY prv_attribute;
     </copy>
     ```
+
     See the image below:
 
     ![Create vector preference](images/hvi-preference.png " ")
 
-    
     The view exposes the stored preference values for the current schema. Use `CTX_PREFERENCE_VALUES` when you need to inspect preferences outside the current schema and have the required access.
 
 4. Create the index with the reusable `my_vectorizer_pref` preference.
@@ -116,8 +115,6 @@ Estimated Time: 20 minutes
 
     ![Create hybrid vector index](images/hvi_create.png " ")
 
-  
-    
 ## Task 2: Verify Hybrid Index Metadata
 
 1. Verify that Oracle Text reports the index as indexed. Then compare its document count with the source-table row count.
@@ -161,11 +158,10 @@ Estimated Time: 20 minutes
     ```
 
     The output displays information about `WIKI_DATA` including its columns, data types, statistics, and indexes.
-    
+
     See the image below:
 
     ![Display information](images/hvi-index-column.png " ")
-
 
 ## Task 3: Inspect the Generated Objects
 
@@ -176,7 +172,7 @@ During index creation, Oracle splits each source document into chunks and genera
 For querying or inspecting this data, use the associated view `HYBRID_IDX$VECTORS` rather than accessing the internal $VR table directly.
 
 1. Inspect the internal table `DR$HYBRID_IDX$VR`.
- 
+
     ```[]
     <copy>
     INFO DR$HYBRID_IDX$VR
@@ -196,7 +192,7 @@ For querying or inspecting this data, use the associated view `HYBRID_IDX$VECTOR
     ```
 
     For direct inspection, use the `HYBRID_IDX$VECTORS` view instead of the internal table. The view includes document and chunk identifiers, chunk offsets and text, and the `DOC_EMBEDDING` vector column.
-    
+
     See the image below:
 
     ![Describe view](images/hvi-vectorchunks-view.png " ")
@@ -223,7 +219,6 @@ For querying or inspecting this data, use the associated view `HYBRID_IDX$VECTOR
 
     ![List chunks texts](images/hvi-vectorchunks-sample.png " ")
 
-
 4. Compare one returned chunk with its source document.
 
     ```[]
@@ -242,7 +237,6 @@ For querying or inspecting this data, use the associated view `HYBRID_IDX$VECTOR
 
     ![List sample text](images/hvi-one-textdocument.png " ")
 
-
 ## Learn More
 
 - [Understand Hybrid Vector Indexes](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/understand-hybrid-vector-indexes.html)
@@ -250,11 +244,10 @@ For querying or inspecting this data, use the associated view `HYBRID_IDX$VECTOR
 - [Hybrid Vector Index Guidelines and Restrictions](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/guidelines-and-restrictions-hybrid-vector-indexes.html)
 - [Vector Index and Hybrid Vector Index Views](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/vector-index-and-hybrid-vector-index-views.html)
 
-
 Next, query `HYBRID_IDX` with keyword, semantic, and hybrid searches.
 
 ## Acknowledgements
-* **Author** - - Ulrike Schwinn, Product Manager, AI Vector Search
-* **Contributors** - Andy Rivenes, Product Manager, AI Vector Search
-* **Last Updated By/Date** - Ulrike Schwinn, August 2026
 
+**Author** - - Ulrike Schwinn, Product Manager, AI Vector Search
+**Contributors** - Andy Rivenes, Product Manager, AI Vector Search
+**Last Updated By/Date** - Ulrike Schwinn, August 2026

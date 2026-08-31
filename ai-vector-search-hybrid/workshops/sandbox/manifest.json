@@ -37,7 +37,7 @@
         {
             "title": "Lab 4: Hybrid Query",
             "description": "Explore Hybrid Query with INTERSECT Fusion and Fuzzy Search",
-            "filename": "../../intersect-fusion-and-fuzzy-search/intersect-fusion-and-fuzzy-search.md"
+            "filename": "../../hybrid-intersect-and-fuzzy-search/intersect-fusion-and-fuzzy-search.md"
         },
         {
             "title": "Lab 5: Iceberg Tables",
