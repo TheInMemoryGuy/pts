@@ -14,7 +14,7 @@ Estimated Time: X
 
 In this lab, you will:
 
-* Connect to the NATIONALPARKS user
+* Connect to the WIKI user
 
 ### Prerequisites
 
@@ -31,7 +31,7 @@ See the image below for an example:
 
 ![Intro screen](images/introduction_page.png " ")
 
-If you click on the "View Login Info" button in the upper left corner of the Introduction page a pop up page will appear on the right. You can click on the SQL Worksheet link and sign in with the username "NATIONALPARKS" and the password "Welcome_12345".
+If you click on the "View Login Info" button in the upper left corner of the Introduction page a pop up page will appear on the right. You can click on the SQL Worksheet link and sign in with the username "WIKI" and the password "Welcome_12345".
 
 See the image below for an example:
 
