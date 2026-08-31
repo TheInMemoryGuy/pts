@@ -20,7 +20,7 @@ For more information about Apache Iceberg tables see [What Is Apache Iceberg? Un
 
 ### Part 1 - Similarity Search on Iceberg Tables
 
-The first part of this Lab will focus on performing a similarity search on an Iceberg table. We will create an external table to access the Iceberg table data since it is located in Object Storage which is external to Oracle AI Database. The external table format supports the VECTOR data type and makes the access of Iceberg tables transparent within Oracle AI Database. Currently the DBMS_CLOUD.CREATE_EXTERNAL_TABLE API does not support the VECTOR datatype for Iceberg tables.
+The first part of this Lab will focus on performing a similarity search on an Iceberg table. We will create an external table to access the Iceberg table data since it is located in Object Storage which is external to Oracle AI Database. The Oracle external table format supports the VECTOR data type and makes the access of Iceberg tables transparent within Oracle AI Database.
 
 In this Lab we have already created the Iceberg table on OCI Object Storage. The table is based on Wikipedia data and the dataset is available on [Hugging Face](https://huggingface.co/datasets/CohereLabs/wikipedia-2023-11-embed-multilingual-v3). The dataset was created by CohereLabs using the [Cohere Embed V3 embedding model](https://txt.cohere.com/introducing-embed-v3/) to create the vector embeddings. We are just using a small 1000 article subset of the data for this Lab. The files on Hugging Face were distributed as Parquet files and we used Python and Spark SQL scripts to create the actual Iceberg table.
 
@@ -54,8 +54,8 @@ Iceberg tables can have two different formats, they can be Manifest-file based o
     <copy>
     SELECT *
     FROM DBMS_CLOUD.LIST_OBJECTS(
-      'OCI_CRED2',
-      'https://objectstorage.us-ashburn-1.oraclecloud.com/n/oradbclouducm/b/bucket-vector/o/iceberg/db/wiki_iceberg_1K'
+      'ICEBERG_OCI_CRED',
+      'https://objectstorage.us-phoenix-1.oraclecloud.com/n/idxtq30nokep/b/ai-vector-iceberg-48735/o/iceberg/db/wiki_iceberg_1K'
     );
     </copy>
     ```
@@ -75,8 +75,8 @@ Next we will create an external table so that we can access our Iceberg table.
     BEGIN
       DBMS_CLOUD.CREATE_EXTERNAL_TABLE(
         table_name =>'wiki_iceberg',
-        credential_name => 'OCI_CRED2',
-        file_uri_list=>'https://objectstorage.us-ashburn-1.oraclecloud.com/n/oradbclouducm/b/bucket-vector/o/iceberg/db/wiki_iceberg_1K/metadata/v1.metadata.json',
+        credential_name => 'ICEBERG_OCI_CRED',
+        file_uri_list=>'https://objectstorage.us-phoenix-1.oraclecloud.com/n/idxtq30nokep/b/ai-vector-iceberg-48735/o/iceberg/db/wiki_iceberg_1K/metadata/v1.metadata.json',
         format=>'{"access_protocol":{"protocol_type":"iceberg"}}',
         column_list => 'id varchar2(32) PRIMARY KEY RELY DISABLE,
           url varchar2(300),
@@ -123,7 +123,7 @@ In this task we will run a similarity search on the Iceberg table data by access
       VECTOR_DISTANCE(emb,
         DBMS_VECTOR_CHAIN.UTL_TO_EMBEDDING('football',
           JSON('{"provider": "ocigenai",
-                 "credential_name": "OCI_GENAI_CRED",
+                 "credential_name": "AI_CREDENTIAL",
                  "url": "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/20231130/actions/embedText",
                  "model": "cohere.embed-multilingual-v3.0",
                  "transfer_timeout":1200}') )) AS dist,
@@ -175,7 +175,7 @@ Now that you have created a vector index you can run the same similarity search 
       VECTOR_DISTANCE(emb,
         DBMS_VECTOR_CHAIN.UTL_TO_EMBEDDING('football',
           JSON('{"provider": "ocigenai",
-                 "credential_name": "OCI_GENAI_CRED",
+                 "credential_name": "AI_CREDENTIAL",
                  "url": "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/20231130/actions/embedText",
                  "model": "cohere.embed-multilingual-v3.0",
                  "transfer_timeout":1200}') )) AS dist,
