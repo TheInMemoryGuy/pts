@@ -131,6 +131,7 @@ In this task we will run a similarity search on the Iceberg table data by access
     FROM  wiki_iceberg
     ORDER BY dist
     FETCH FIRST 5 ROWS ONLY;
+    </copy>
     ```
 
     ![similarity search](images/similarity_search.png " ")
