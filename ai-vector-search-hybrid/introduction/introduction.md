@@ -55,13 +55,13 @@ This lab assumes you have:
 
 * An Oracle Account (oracle.com account)
 
-## Dataset
+### Dataset
 
 This workshop uses a public source:
 
 * A public dataset from the [Wikipedia Foundation] (https://dumps.wikimedia.org) web site.
 
-## Tools
+### Tools
 
 The examples in the Lab were run using the Google Chrome browser. If you use a different browser some attributes may look slightly different. For example, cut and paste may behave differently, and opening new windows based on a URL may have slightly different instructions.
 

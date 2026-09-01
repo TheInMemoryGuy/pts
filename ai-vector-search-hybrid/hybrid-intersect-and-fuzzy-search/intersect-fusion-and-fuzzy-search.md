@@ -170,6 +170,8 @@ Oracle Text `fuzzy()` expands a term to similarly spelled terms that exist in th
 
     ![Fuzzy-search result.](images/hvi-intersect-fuzzy.png " ")
 
+    **Proceed to the next lab**
+
 ## Wrap-up
 
 This lab used three hybrid retrieval patterns:

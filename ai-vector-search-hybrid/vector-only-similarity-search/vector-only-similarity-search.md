@@ -190,7 +190,9 @@ Use `JSON_TABLE` when you need to join the `SEARCH` response with `WIKI_DATA` or
 
     ![Relational result from SEARCHPIPELINE.](images/searchpipeline-result.png " ")
 
-You now have a semantic-search baseline at both the chunk and document level. In the next lab, add a text clause and choose a fusion strategy to combine semantic relevance with keyword requirements.
+    You now have a semantic-search baseline at both the chunk and document level. In the next lab, add a text clause and choose a fusion strategy to combine semantic relevance with keyword requirements.
+
+    **Proceed to the next lab**
 
 ## Learn More
 

@@ -237,6 +237,8 @@ For querying or inspecting this data, use the associated view `HYBRID_IDX$VECTOR
 
     ![List sample text](images/hvi-one-textdocument.png " ")
 
+    **Proceed to the next lab**
+
 ## Learn More
 
 - [Understand Hybrid Vector Indexes](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/understand-hybrid-vector-indexes.html)

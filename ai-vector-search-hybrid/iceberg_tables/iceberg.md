@@ -119,16 +119,16 @@ In this task we will run a similarity search on the Iceberg table data by access
     ```[]
     <copy>
     SELECT
-      title,
-      VECTOR_DISTANCE(emb,
-        DBMS_VECTOR_CHAIN.UTL_TO_EMBEDDING('football',
-          JSON('{"provider": "ocigenai",
-                 "credential_name": "AI_CREDENTIAL",
-                 "url": "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/20231130/actions/embedText",
-                 "model": "cohere.embed-multilingual-v3.0",
-                 "transfer_timeout":1200}') )) AS dist,
-      text
-    FROM  wiki_iceberg
+      w.title,
+      VECTOR_DISTANCE(w.emb,
+        (SELECT DBMS_VECTOR_CHAIN.UTL_TO_EMBEDDING('football',
+           JSON('{"provider": "ocigenai",
+                  "credential_name": "AI_CREDENTIAL",
+                  "url": "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/20231130/actions/embedText",
+                  "model": "cohere.embed-multilingual-v3.0",
+                  "transfer_timeout":1200}'))) ) AS dist,
+      w.text
+    FROM  wiki_iceberg w
     ORDER BY dist
     FETCH FIRST 5 ROWS ONLY;
     </copy>
@@ -172,16 +172,16 @@ Now that you have created a vector index you can run the same similarity search 
     ```[]
     <copy>
     SELECT
-      title,
-      VECTOR_DISTANCE(emb,
-        DBMS_VECTOR_CHAIN.UTL_TO_EMBEDDING('football',
-          JSON('{"provider": "ocigenai",
-                 "credential_name": "AI_CREDENTIAL",
-                 "url": "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/20231130/actions/embedText",
-                 "model": "cohere.embed-multilingual-v3.0",
-                 "transfer_timeout":1200}') )) AS dist,
-      text
-    FROM  wiki_iceberg
+      w.title,
+      VECTOR_DISTANCE(w.emb,
+        (SELECT DBMS_VECTOR_CHAIN.UTL_TO_EMBEDDING('football',
+           JSON('{"provider": "ocigenai",
+                  "credential_name": "AI_CREDENTIAL",
+                  "url": "https://inference.generativeai.us-chicago-1.oci.oraclecloud.com/20231130/actions/embedText",
+                  "model": "cohere.embed-multilingual-v3.0",
+                  "transfer_timeout":1200}'))) ) AS dist,
+      w.text
+    FROM  wiki_iceberg w
     ORDER BY dist
     FETCH FIRST 5 ROWS ONLY;
     </copy>
