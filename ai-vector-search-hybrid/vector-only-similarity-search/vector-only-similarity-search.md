@@ -53,7 +53,7 @@ Estimated Time: 20 minutes
 
 ---
 
-## Task 1: Query Chunks Directly with VECTOR_DISTANCE
+## Task 1: Query Chunks Directly with VECTOR\_DISTANCE
 
 The `HYBRID_IDX$VECTORS` view exposes the chunks and embeddings created for the hybrid vector index. Query the view directly to see how SQL ranks individual chunks by cosine distance.
 
@@ -88,7 +88,7 @@ The `HYBRID_IDX$VECTORS` view exposes the chunks and embeddings created for the 
 
     ![Vector-distance query results for chunks.](images/vectordistance-with-chunks.png " ")
 
-## Task 2: Run Document-Level Vector Retrieval with DBMS_HYBRID_VECTOR.SEARCH
+## Task 2: Run Document-Level Vector Retrieval with DBMS\_HYBRID\_VECTOR.SEARCH
 
 `DBMS_HYBRID_VECTOR.SEARCH` accepts a JSON request and returns a JSON result. This request uses vector search only and returns document-level results. The query works directly on the Hybrid Vector Index; it does not explicitly reference the source table.
 
