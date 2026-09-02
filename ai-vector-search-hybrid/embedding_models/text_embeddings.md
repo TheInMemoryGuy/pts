@@ -155,4 +155,3 @@ Generate a vector for a short piece of text. Then view it.
 * **Author** - - Andy Rivenes, Product Manager, AI Vector Search
 * **Contributors** - Ulrike Schwinn, Product Manager, AI Vector Search
 * **Last Updated By/Date** - Ulrike Schwinn, August 2026
-
