@@ -142,6 +142,8 @@ Generate a vector for a short piece of text. Then view it.
 
     The result is a 384-value vector. You do not need to interpret individual values. Click the eye icon beside the truncated value to view the complete vector.
 
+    **Proceed to the next lab**
+
 ## Learn More
 
 * [Oracle AI Vector Search User's Guide](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/index.html)

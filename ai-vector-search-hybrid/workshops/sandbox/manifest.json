@@ -5,14 +5,14 @@
         "../../variables/variables-in-another-file.json"],
     "tutorials": [
         {
-            "title": "Get Started",
-            "description": "Prerequisites for LiveLabs (Oracle-owned tenancies). The title of the lab and the Contents Menu title (the title above) match for Prerequisite lab. This lab is always first.",
-            "filename": "https://livelabs.oracle.com/cdn/common/labs/cloud-login/cloud-login-livelabs2.md"
-        },
-        {
             "title": "Introduction",
             "description": "Introduction to Hybrid Search.",
             "filename": "../../introduction/introduction.md"
+        },
+        {
+            "title": "Get Started",
+            "description": "Prerequisites for LiveLabs (Oracle-owned tenancies). The title of the lab and the Contents Menu title (the title above) match for Prerequisite lab. This lab is always first.",
+            "filename": "https://livelabs.oracle.com/cdn/common/labs/cloud-login/cloud-login-livelabs2.md"
         },
         {
             "title": "Database Connection",
@@ -25,17 +25,22 @@
             "filename": "../../embedding_models/text_embeddings.md"
         },
         {
-            "title": "Lab 2: Exhaustive Search",
-            "description": "Understanding Exhaustive Similarity Search",
-            "filename": "../../exhaustive_search/exhaustive_search.md"
+            "title": "Lab 2: Hybrid Vector Index",
+            "description": "Create and explore Hybrid Vector Index",
+            "filename": "../../hybrid-vector-index/hybrid-vector-index.md"
         },
         {
-            "title": "Lab 3: Approximate Search",
-            "description": "Understanding Approximate Similarity Search",
-            "filename": "../../approximate_search/approx_search.md"
+            "title": "Lab 3: Similarity Search (Vector-Only)",
+            "description": "Similarity Search with SQL and DBMS_SEARCH",
+            "filename": "../../vector-only-similarity-search/vector-only-similarity-search.md"
         },
         {
-            "title": "Lab 4: Iceberg Tables",
+            "title": "Lab 4: Hybrid Query",
+            "description": "Explore Hybrid Query with INTERSECT Fusion and Fuzzy Search",
+            "filename": "../../hybrid-intersect-and-fuzzy-search/intersect-fusion-and-fuzzy-search.md"
+        },
+        {
+            "title": "Lab 5: Iceberg Tables",
             "description": "Exploring Iceberg Table Search",
             "filename": "../../iceberg_tables/iceberg.md"
         },

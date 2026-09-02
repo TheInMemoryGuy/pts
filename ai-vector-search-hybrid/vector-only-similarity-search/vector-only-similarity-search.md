@@ -15,6 +15,7 @@ For hybrid searches, Oracle combines keyword and vector results into one single 
 ### Search Modes
 
 You can query a Hybrid Vector Index with several vector and keyword search modes. The following list shows the available modes.
+
 - Pure semantic search in Document Mode: Performs vector similarity search over chunks, then aggregates matching chunk scores per document to return the most semantically relevant documents.
 - Pure semantic search in Chunk Mode: Performs vector similarity search and returns the individual chunks whose embeddings are most semantically similar to the query.
 - Pure keyword search in Document Mode: Performs an Oracle Text CONTAINS search and returns the documents with the highest keyword-match scores.
@@ -24,13 +25,13 @@ You can query a Hybrid Vector Index with several vector and keyword search modes
 ### Result Formats
 
 The two API functions return results in different formats.
+
 - `DBMS_HYBRID_VECTOR.SEARCH` returns JSON. Use `JSON_TABLE` to convert that JSON into rows and columns for SQL.
 - `DBMS_HYBRID_VECTOR.SEARCHPIPELINE` is a pipelined table function. It returns rows directly, so you can join and filter them in SQL.
 
 This lab focuses on pure semantic search in document mode. First, you use `DBMS_HYBRID_VECTOR.SEARCH` and inspect its JSON output. Next, you use `JSON_TABLE` to convert the result to relational rows. Finally, you use `DBMS_HYBRID_VECTOR.SEARCHPIPELINE` to return rows directly and join them with `WIKI_DATA`.
 
 You compare the approaches and learn when to use each one. The API accepts a JSON specification for all query parameters.
-
 
 ### Objectives
 
@@ -52,7 +53,7 @@ Estimated Time: 20 minutes
 
 ---
 
-## Task 1: Query Chunks Directly with `VECTOR_DISTANCE`
+## Task 1: Query Chunks Directly with VECTOR\_DISTANCE
 
 The `HYBRID_IDX$VECTORS` view exposes the chunks and embeddings created for the hybrid vector index. Query the view directly to see how SQL ranks individual chunks by cosine distance.
 
@@ -86,27 +87,26 @@ The `HYBRID_IDX$VECTORS` view exposes the chunks and embeddings created for the 
     The query returns chunks, not documents. A source document can appear more than once when several of its chunks match. In this example, the document titled `Physics` appears three times, for chunk 1, 4, and 5.
 
     ![Vector-distance query results for chunks.](images/vectordistance-with-chunks.png " ")
-       
 
-## Task 2: Run Document-Level Vector Retrieval with `DBMS_HYBRID_VECTOR.SEARCH`
+## Task 2: Run Document-Level Vector Retrieval with DBMS\_HYBRID\_VECTOR.SEARCH
 
 `DBMS_HYBRID_VECTOR.SEARCH` accepts a JSON request and returns a JSON result. This request uses vector search only and returns document-level results. The query works directly on the Hybrid Vector Index; it does not explicitly reference the source table.
- 
+
 1. Run the query.
 
     ```[]
     <copy>
     SELECT DBMS_HYBRID_VECTOR.SEARCH(JSON(
-        '{"hybrid_index_name": "HYBRID_IDX", 
+        '{"hybrid_index_name": "HYBRID_IDX",
           "vector": 
           {"search_text":"What are major scientific discoveries in Physics made by scientists in the last century?",
           "search_mode":"DOCUMENT",
-          "aggregator" : "MAX"},                         
+          "aggregator" : "MAX"},
           "return":
-          {"values": ["score","rowid", "chunk_id"],  
+          {"values": ["score","rowid", "chunk_id"],
            "topN"  : 10}
          }' )) AS result;
-    </copy>     
+    </copy>
     ```
 
     `hybrid_index_name` identifies the index. Oracle embeds `search_text` and compares it with indexed chunk vectors. `DOCUMENT` mode groups matching chunks by source document. `MAX`, the default aggregator, uses the best chunk score for each document. The `return` clause requests the score, row ID, and chunk ID. `topN` limits the response to ten documents.
@@ -116,7 +116,6 @@ The `HYBRID_IDX$VECTORS` view exposes the chunks and embeddings created for the 
     Each JSON object includes the source `rowid`, the overall `score`, `vector_score`, and one or more `chunk_id` values. In this example, the document with row ID `AAAkcsAAAAADBPLACA` has chunk IDs 1, 4, and 5. Because this is a vector-only query, the final score reflects the vector result. Higher scores indicate stronger relevance in this API.
 
     ![JSON result from DBMS_HYBRID_VECTOR.SEARCH.](images/dbmssearchjson-result.png " ")
-
 
 ## Task 3: Project the JSON response into relational rows
 
@@ -132,13 +131,13 @@ Use `JSON_TABLE` when you need to join the `SEARCH` response with `WIKI_DATA` or
            p.url
     FROM JSON_TABLE(
              DBMS_HYBRID_VECTOR.SEARCH(
-               JSON('{"hybrid_index_name": "HYBRID_IDX", 
-          "vector": 
+               JSON('{"hybrid_index_name": "HYBRID_IDX",
+          "vector":
           {"search_text":"What are major scientific discoveries in Physics made by scientists in the last century?",
            "search_mode":"DOCUMENT",
-           "aggregator" : "MAX"},                         
+           "aggregator" : "MAX"},
           "return":
-          {"values": ["score","rowid", "chunk_id"],  
+          {"values": ["score","rowid", "chunk_id"],
            "topN"  : 10}}' )
              ),
              '$[*]'
@@ -157,9 +156,7 @@ Use `JSON_TABLE` when you need to join the `SEARCH` response with `WIKI_DATA` or
 
     ![Relational result from JSON_TABLE.](images/jsontable-result.png " ")
 
-
-
-## Task 4: Query the index with `SEARCHPIPELINE`
+## Task 4: Query the index with SEARCHPIPELINE
 
 `DBMS_HYBRID_VECTOR.SEARCHPIPELINE` returns a pipelined table. You can join and filter the result directly in SQL.
 
@@ -172,13 +169,13 @@ Use `JSON_TABLE` when you need to join the `SEARCH` response with `WIKI_DATA` or
            p.title,
            p.url
     FROM   DBMS_HYBRID_VECTOR.SEARCHPIPELINE(
-             JSON('{"hybrid_index_name": "HYBRID_IDX", 
-          "vector": 
+             JSON('{"hybrid_index_name": "HYBRID_IDX",
+          "vector":
           {"search_text":"What are major scientific discoveries in Physics made by scientists in the last century?",
           "search_mode":"DOCUMENT",
-          "aggregator" : "MAX"},                         
+          "aggregator" : "MAX"},
           "return":
-          {"values": ["score","rowid", "chunk_id"],  
+          {"values": ["score","rowid", "chunk_id"],
            "topN"  : 10}}' )
              ) h
            JOIN wiki_data p ON p.rowid = h.doc_rowid
@@ -193,18 +190,19 @@ Use `JSON_TABLE` when you need to join the `SEARCH` response with `WIKI_DATA` or
 
     ![Relational result from SEARCHPIPELINE.](images/searchpipeline-result.png " ")
 
+    You now have a semantic-search baseline at both the chunk and document level. In the next lab, add a text clause and choose a fusion strategy to combine semantic relevance with keyword requirements.
 
-You now have a semantic-search baseline at both the chunk and document level. In the next lab, add a text clause and choose a fusion strategy to combine semantic relevance with keyword requirements.
+    **Proceed to the next lab**
 
 ## Learn More
 
-* [Perform Exact Similarity Search](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/perform-exact-similarity-search.html)
+- [Perform Exact Similarity Search](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/perform-exact-similarity-search.html)
 - [SEARCH](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/search.html)
 - [SEARCHPIPELINE](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/searchpipeline.html)
 - [Understand Hybrid Search](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/understand-hybrid-search.html)
 
 ## Acknowledgements
-* **Author** - - Ulrike Schwinn, Product Manager, AI Vector Search
-* **Contributors** - Andy Rivenes, Product Manager, AI Vector Search
-* **Last Updated By/Date** - Ulrike Schwinn, August 2026
 
+**Author** - - Ulrike Schwinn, Product Manager, AI Vector Search
+**Contributors** - Andy Rivenes, Product Manager, AI Vector Search
+**Last Updated By/Date** - Ulrike Schwinn, August 2026

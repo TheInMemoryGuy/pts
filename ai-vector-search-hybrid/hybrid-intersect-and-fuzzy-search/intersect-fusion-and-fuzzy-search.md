@@ -2,20 +2,17 @@
 
 ## Introduction
 
-
 Hybrid vector indexes combine an Oracle AI Vector Search vector index with an Oracle Text search index. By combining keyword-based text search with vector similarity search, you can return results that meet both lexical and semantic requirements.
 
 In the previous lab, you ran vector-only similarity searches against `HYBRID_IDX`. In this lab, you investigate hybrid search. For hybrid search, Oracle combines keyword and vector result sets into one ranked list. Fusion determines which results remain. For example, `UNION` retains results from either search. `INTERSECT` retains only results returned by both the text and vector searches.
 
 This lab adds a keyword requirement to semantic search. It uses `search_fusion: INTERSECT` to retain only results that match both searches.
 
-Oracle Text `CONTAINS` expressions support operators such as `OR` (`|`), `AND` (`&`), stem (`$`), and minus (`-`). For the complete list, see [Oracle Text CONTAINS Query Operators](https://docs.oracle.com/en/database/oracle/oracle-database/26/ccref/oracle-text-CONTAINS-query-operators.html).
+Oracle Text `CONTAINS` expressions support operators such as `OR` (`|`), `AND` (`&`), stem (`$`), and minus (`-`). For the complete list, see [Oracle Text CONTAINS Query Operators](https://docs.oracle.com/en/database/oracle/oracle-database/26/ccref/oracle-text-contains-query-operators.html).
 
 This lab uses the Oracle Text `fuzzy()` operator. Fuzzy matching expands a keyword to similarly spelled terms that occur in the index. It helps recover matches when a user misspells a search term.
 
 You can maintain a hybrid vector index with the same general operations as an Oracle Text index. These include synchronization, optimization, and automatic maintenance.
-
-
 
 ### Objectives
 
@@ -131,7 +128,6 @@ Find articles about major discoveries in physics. Require the text condition to 
 
     ![SEARCHPIPELINE result.](images/hvi-intersect-searchpipeline.png " ")
 
-
 ## Task 3: Add Fuzzy Matching to the Text Filter
 
 Oracle Text `fuzzy()` expands a term to similarly spelled terms that exist in the index. This helps recover matches when a search term contains a typo.
@@ -174,6 +170,7 @@ Oracle Text `fuzzy()` expands a term to similarly spelled terms that exist in th
 
     ![Fuzzy-search result.](images/hvi-intersect-fuzzy.png " ")
 
+    **Proceed to the next lab**
 
 ## Wrap-up
 
@@ -183,16 +180,16 @@ This lab used three hybrid retrieval patterns:
 - `INTERSECT` returns rows that are semantically close and match the text condition.
 - `INTERSECT` with `fuzzy()` returns rows that meet both conditions when the text term is misspelled.
 
-`UNION` broadens recall by retaining rows from either search signal. `TEXT_ONLY` returns keyword-driven results. Both use the same JSON query structure with a different `search_fusion` value.
-
+UNION broadens recall by retaining rows from either search signal. `TEXT_ONLY` returns keyword-driven results. Both use the same JSON query structure with a different `search_fusion` value.
 
 ## Learn More
 
-- [DBMS_HYBRID_VECTOR](https://docs.oracle.com/en/database/oracle/oracle-database/26/arpls/dbms_hybrid_vector1.html)
+- [DBMS\_HYBRID\_VECTOR](https://docs.oracle.com/en/database/oracle/oracle-database/26/arpls/dbms_hybrid_vector1.html)
 - [Query Hybrid Vector Indexes: End-to-End Example](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/query-hybrid-vector-indexes-end-end-example.html)
-- [Oracle Text CONTAINS Query Operators](https://docs.oracle.com/en/database/oracle/oracle-database/26/ccref/oracle-text-CONTAINS-query-operators.html)
+- [Oracle Text CONTAINS Query Operators](https://docs.oracle.com/en/database/oracle/oracle-database/26/ccref/oracle-text-contains-query-operators.html)
 
 ## Acknowledgements
-* **Author** - - Ulrike Schwinn, Product Manager, AI Vector Search
-* **Contributors** - Andy Rivenes, Product Manager, AI Vector Search
-* **Last Updated By/Date** - Ulrike Schwinn, August 2026
+
+**Author** - Ulrike Schwinn, Product Manager, AI Vector Search
+**Contributors** - Andy Rivenes, Product Manager, AI Vector Search
+**Last Updated By/Date** - Ulrike Schwinn, August 2026

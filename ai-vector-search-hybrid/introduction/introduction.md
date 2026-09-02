@@ -24,7 +24,15 @@ Why use AI Vector Search?
 
 At the heart of AI Vector Search is the ability to do a similarity search. A similarity search works with the semantic representations of your data rather than the value (words or pixels) and finds similar objects quickly. For example, find other images or documents that look like this one.  It uses vectors, or more precisely vector embeddings, to search for semantically similar objects based on their proximity to each other. In other words, vector embeddings are a way of representing almost any kind of data, like text, images, videos, and even music, as points in a multidimensional space where the locations of those points and proximity to other data are semantically meaningful.
 
+What is a Hybrid Search?
+
 A Hybrid Search builds on the AI Vector Search foundational technology by combining similarity search with more traditional Oracle Text search to narrow the focus of the similarity search or to reinforce the similarity search. This is explained in more detail in this blog post [Using Hybrid Vector Indexes in AI Vector Search](https://blogs.oracle.com/database/using-hybrid-vector-indexes).
+
+Why Iceberg Tables?
+
+For many customers not all of their unstructured data lives in an Oracle database. With Oracle AI Database 26ai customers can access their vendor-independent Apache Iceberg data, as well as other external data, to run AI and analytics securely while still having access to their internal data stored in Oracle AI Database.
+
+The Hybrid Search Workshop
 
 In this workshop we will build the AI Vector Search features that will enable you to use AI Vector Search to search on text and image data. In the interest of time, and not to get too far into all of the implementation details, we have already set up the database environment including pre-staging files, pre-loading embedding models and even pre-loading vector embeddings. All of this was done so that you could just run the labs in the workshop and see how Hybrid Search works. In our [blog posts](https://blogs.oracle.com/database/category/db-vector-search) we have gone into more detail about how AI Vector Search works and there is a wealth of information and examples in the [Oracle AI Vector Search User's Guide](https://docs.oracle.com/en/database/oracle/oracle-database/26/vecse/index.html) about how to use and implement AI Vector Search.
 
@@ -47,13 +55,13 @@ This lab assumes you have:
 
 * An Oracle Account (oracle.com account)
 
-## Dataset
+### Dataset
 
 This workshop uses a public source:
 
 * A public dataset from the [Wikipedia Foundation] (https://dumps.wikimedia.org) web site.
 
-## Tools
+### Tools
 
 The examples in the Lab were run using the Google Chrome browser. If you use a different browser some attributes may look slightly different. For example, cut and paste may behave differently, and opening new windows based on a URL may have slightly different instructions.
 
@@ -69,6 +77,6 @@ In this Lab you will use Database Actions SQL Worksheet to access the database a
 * [Oracle Documentation](http://docs.oracle.com)
 
 ## Acknowledgements
-* **Author** - Andy Rivenes, Product Manager, AI Vector Search
-* **Contributors** - Ulrike Schwinn, Product Manager, AI Vector Search
-* **Last Updated By/Date** - Andy Rivenes, Product Manager, AI Vector Search, July 2026
+* **Authors** - Andy Rivenes, Ulrike Schwinn, Product Managers, AI Vector Search
+* **Contributors** -
+* **Last Updated By/Date** - Andy Rivenes, Product Manager, AI Vector Search, September 2026
