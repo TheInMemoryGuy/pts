@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This lab walks you through the steps to connect to your AI Vector Search database. The process is different if you are running the workshop on your own environment (tenancy) versus running the workshop in an Oracle environment (sandbox).
+This lab walks you through the steps to connect to your Oracle AI Database 26ai database.
 
 Watch the video below for a quick walk-through of the similarity search on images lab:
 
@@ -14,7 +14,7 @@ Estimated Time: X
 
 In this lab, you will:
 
-* Connect to the WIKI user
+* Connect to the WIKIQUERY user
 
 ### Prerequisites
 
@@ -31,7 +31,7 @@ See the image below for an example:
 
 ![Intro screen](images/introduction_page.png " ")
 
-If you click on the "View Login Info" button in the upper left corner of the Introduction page a pop up page will appear on the right. You can click on the SQL Worksheet link and sign in with the username "WIKI" and the password "Welcome_12345".
+If you click on the "View Login Info" button in the upper left corner of the Introduction page a pop up page will appear on the right. You can click on the SQL Worksheet link and sign in with the username "WIKIQUERY" and the password "Welcome_12345".
 
 See the image below for an example:
 
@@ -50,5 +50,5 @@ After signing in you should see a browser window like the following:
 
 ## Acknowledgements
 * **Author** - Andy Rivenes, Product Manager, AI Vector Search
-* **Contributors**
-* **Last Updated By/Date** - Andy Rivenes, Product Manager, AI Vector Search, February 2026
+* **Contributors** - Ulrike Schwinn, Product Manager, AI Vector Search
+* **Last Updated By/Date** - Andy Rivenes, Product Manager, AI Vector Search, September 2026
